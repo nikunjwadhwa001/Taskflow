@@ -1,0 +1,14 @@
+{{ template "header" . }}
+<h1>Dashboard</h1>
+<p>You are logged in 🎉</p>
+
+<button onclick="logout()">Logout</button>
+
+<script src="/static/js/dashboard.js"></script>
+<script>
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+    }
+</script>
+{{ template "footer" . }}
