@@ -1,0 +1,21 @@
+{{ template "header" . }}
+<h1>Your Projects</h1>
+
+<!-- Create Project Form -->
+<form id="createProjectForm">
+    <input type="text" id="projectName" placeholder="Project name" required>
+    <button type="submit">Create</button>
+</form>
+
+<hr>
+
+<!-- List Projects -->
+<ul id="projectList">
+    <!-- Projects will be loaded here via JS -->
+</ul>
+<li>
+    <a href="/projects/{{ .ID }}/tasks">{{ .Name }}</a>
+</li>
+
+<script src="/static/js/projects.js"></script>
+{{ template "footer" . }}

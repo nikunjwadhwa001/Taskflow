@@ -40,19 +40,37 @@ func main() {
 	api := r.Group("/api")
 	api.Use(middleware.AuthMiddleware())
 	{
-		api.GET("/dashboard", func(c *gin.Context) {
-			userID, _ := c.Get("user_id")
-			c.JSON(200, gin.H{
-				"message": "Welcome to dashboard",
-				"user_id": userID,
-			})
-		})
+		api.GET("/dashboard", controllers.GetDashboardStats)
+
+		api.GET("/projects", controllers.ListProjects)
+		api.POST("/projects", controllers.CreateProject)
+		api.GET("/projects/:projectId/tasks", controllers.ListTasks)
+		api.POST("/projects/:projectId/tasks", controllers.CreateTask)
+		api.DELETE("/projects/:projectId", controllers.DeleteProject)
+		api.POST("/tasks/:taskId/status", controllers.UpdateTaskStatus)
+		api.DELETE("/tasks/:taskId", controllers.DeleteTask)
+
 	}
 
 	// Dashboard Page (Auth checked via JS)
 	r.GET("/dashboard", func(c *gin.Context) {
 		c.HTML(200, "dashboard.html", gin.H{
 			"title": "Dashboard",
+		})
+	})
+
+	// Projects Page (Auth checked via JS)
+	r.GET("/projects", func(c *gin.Context) {
+		c.HTML(200, "projects.html", gin.H{
+			"title": "Projects",
+		})
+	})
+
+	// Tasks Page (Auth checked via JS)
+	r.GET("/projects/:projectId/tasks", func(c *gin.Context) {
+		c.HTML(200, "tasks.html", gin.H{
+			"title":     "Tasks",
+			"projectId": c.Param("projectId"),
 		})
 	})
 

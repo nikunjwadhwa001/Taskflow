@@ -21,7 +21,7 @@ func ConnectDatabase() {
 	}
 
 	// Auto migrate models
-	database.AutoMigrate(&models.User{})
+	database.AutoMigrate(&models.User{}, &models.Project{}, &models.Task{})
 
 	DB = database
 	fmt.Println("✅ Database connected & migrated")

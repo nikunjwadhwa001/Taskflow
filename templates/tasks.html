@@ -1,0 +1,37 @@
+{{ template "header" . }}
+<h1>Tasks</h1>
+
+<!-- Hidden field to store projectId for JS -->
+<input type="hidden" id="projectId" value="{{ .projectId }}">
+
+<form id="createTaskForm">
+    <input type="text" id="taskTitle" placeholder="Task title" required><br><br>
+    <textarea id="taskDesc" placeholder="Description"></textarea><br><br>
+    <button type="submit">Add Task</button>
+</form>
+
+<hr>
+
+<ul id="taskList">
+    <!-- Tasks loaded via JS -->
+</ul>
+
+<a href="/projects">← Back to projects</a>
+
+<script src="/static/js/tasks.js"></script>
+<li>
+    <strong>{{ .Title }}</strong> —
+    <em>{{ .Status }}</em>
+
+    <form method="POST" action="/projects/tasks/{{ .ID }}/status" style="display:inline;">
+        {{ if eq .Status "todo" }}
+        <input type="hidden" name="status" value="in_progress">
+        <button type="submit">Start</button>
+        {{ else if eq .Status "in_progress" }}
+        <input type="hidden" name="status" value="done">
+        <button type="submit">Complete</button>
+        {{ end }}
+    </form>
+</li>
+
+{{ template "footer" . }}

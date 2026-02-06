@@ -1,10 +1,39 @@
 {{ template "header" . }}
 <h1>Dashboard</h1>
-<p>You are logged in 🎉</p>
+<p>Welcome back! Here is your overview.</p>
 
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+    <div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; min-width: 150px;">
+        <h3>Total Projects</h3>
+        <p id="totalProjects" style="font-size: 24px; font-weight: bold;">Loading...</p>
+    </div>
+
+    <div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; min-width: 150px;">
+        <h3>Total Tasks</h3>
+        <p id="totalTasks" style="font-size: 24px; font-weight: bold;">Loading...</p>
+    </div>
+</div>
+
+<h3>Task Status</h3>
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; flex: 1;">
+        <strong>To Do</strong>
+        <p id="todoCount">0</p>
+    </div>
+    <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; flex: 1;">
+        <strong>In Progress</strong>
+        <p id="inProgressCount">0</p>
+    </div>
+    <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; flex: 1;">
+        <strong>Done</strong>
+        <p id="doneCount">0</p>
+    </div>
+</div>
+
+<br>
 <button onclick="logout()">Logout</button>
 
-<script src="/static/js/dashboard.js"></script>
+<script src="/static/js/dashboard.js?v=2"></script>
 <script>
     function logout() {
         localStorage.removeItem("token");
