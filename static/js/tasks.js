@@ -35,39 +35,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (data.tasks && data.tasks.length > 0) {
                 data.tasks.forEach(task => {
-                    const li = document.createElement("li");
-                    let actionParams = '';
-                    if (task.Status === 'todo') {
-                        actionParams = `<button onclick="updateStatus(${task.ID}, 'in_progress')">Start</button>`;
-                    } else if (task.Status === 'in_progress') {
-                        actionParams = `<button onclick="updateStatus(${task.ID}, 'done')">Complete</button>`;
+                    const row = document.createElement("div");
+                    row.className = "task-row";
+
+                    let badgeClass = "badge-todo";
+                    let actionBtn = `<button onclick="updateStatus(${task.ID}, 'in_progress')" class="btn btn-sm btn-outline">Start</button>`;
+
+                    if (task.Status === 'in_progress') {
+                        badgeClass = "badge-progress";
+                        actionBtn = `<button onclick="updateStatus(${task.ID}, 'done')" class="btn btn-sm btn-primary">Complete</button>`;
                     } else if (task.Status === 'done') {
-                        actionParams = `<span>✅</span>`;
+                        badgeClass = "badge-done";
+                        actionBtn = ""; // No action for done
                     }
 
-                    li.innerHTML = `
-                        <strong>${task.Title}</strong> — ${task.Status} 
-                        ${actionParams}
-                        <button onclick="deleteTask(${task.ID})" style="color: red; margin-left: 10px;">Delete</button>
+                    row.innerHTML = `
+                        <div class="task-info">
+                            <span class="task-title">${task.Title} <span class="badge ${badgeClass}">${task.Status.replace('_', ' ')}</span></span>
+                            <span class="task-desc">${task.Description || ''}</span>
+                        </div>
+                        <div class="task-meta">
+                            ${actionBtn}
+                            <button onclick="deleteTask(${task.ID})" class="btn btn-sm btn-danger">Delete</button>
+                        </div>
                     `;
-                    taskList.appendChild(li);
+                    taskList.appendChild(row);
                 });
 
-                // Pagination Controls
+                // Pagination Controls (Styled)
                 const totalPages = data.totalPages;
                 currentPage = data.currentPage;
 
                 const paginationDiv = document.createElement("div");
-                paginationDiv.style.marginTop = "20px";
+                paginationDiv.style.marginTop = "2rem";
+                paginationDiv.style.display = "flex";
+                paginationDiv.style.justifyContent = "center";
+                paginationDiv.style.gap = "1rem";
+                paginationDiv.style.alignItems = "center";
+
                 paginationDiv.innerHTML = `
-                    <button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Previous</button>
-                    <span>Page ${currentPage} of ${totalPages}</span>
-                    <button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>
+                    <button class="btn btn-sm btn-outline" ${currentPage === 1 ? 'disabled style="opacity:0.5"' : ''} onclick="changePage(${currentPage - 1})">Previous</button>
+                    <span style="font-weight: 500; color: var(--text-muted);">Page ${currentPage} of ${totalPages}</span>
+                    <button class="btn btn-sm btn-outline" ${currentPage === totalPages ? 'disabled style="opacity:0.5"' : ''} onclick="changePage(${currentPage + 1})">Next</button>
                 `;
                 taskList.appendChild(paginationDiv);
 
             } else {
-                taskList.innerHTML = "<li>No tasks yet</li>";
+                taskList.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 2rem;">No tasks found. Add one above!</div>`;
             }
 
         } catch (error) {
@@ -94,12 +108,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (response.ok) {
                 console.log("Status updated");
-                loadTasks(currentPage); // Refresh list to show new status/buttons
+                loadTasks(currentPage);
+                showFlash("Status updated!");
             } else {
-                alert("Failed to update status");
+                showFlash("Failed to update status", "error");
             }
         } catch (error) {
             console.error("Error updating status:", error);
+            showFlash("Error updating status", "error");
         }
     };
 
@@ -115,11 +131,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (response.ok) {
                 loadTasks(currentPage);
+                showFlash("Task deleted!");
             } else {
-                alert("Failed to delete task");
+                showFlash("Failed to delete task", "error");
             }
         } catch (error) {
             console.error("Error deleting task:", error);
+            showFlash("Error deleting task", "error");
         }
     }
 
@@ -143,12 +161,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("taskTitle").value = "";
                 document.getElementById("taskDesc").value = "";
                 loadTasks(currentPage);
+                showFlash("Task created!");
             } else {
-                alert("Failed to create task");
+                showFlash("Failed to create task", "error");
             }
 
         } catch (error) {
             console.error("Error creating task:", error);
+            showFlash("Error creating task", "error");
         }
     });
 

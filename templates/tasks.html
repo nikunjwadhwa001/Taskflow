@@ -1,37 +1,26 @@
 {{ template "header" . }}
-<h1>Tasks</h1>
 
-<!-- Hidden field to store projectId for JS -->
-<input type="hidden" id="projectId" value="{{ .projectId }}">
+<div class="container">
+    <div style="margin-bottom: 2rem;">
+        <a href="/projects" style="color: var(--text-muted); font-size: 0.9rem;">&larr; Back to Projects</a>
+        <h1 style="margin-top: 0.5rem;">Tasks</h1>
+    </div>
 
-<form id="createTaskForm">
-    <input type="text" id="taskTitle" placeholder="Task title" required><br><br>
-    <textarea id="taskDesc" placeholder="Description"></textarea><br><br>
-    <button type="submit">Add Task</button>
-</form>
+    <!-- Create Task Inline -->
+    <div class="card" style="margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-style: dashed;">
+        <form id="createTaskForm" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <input type="hidden" id="projectId" value="{{ .projectId }}">
+            <input type="text" id="taskTitle" placeholder="What needs to be done?" required style="flex: 2; margin: 0;">
+            <input type="text" id="taskDesc" placeholder="Description (Optional)" style="flex: 3; margin: 0;">
+            <button type="submit" class="btn btn-primary">Add Task</button>
+        </form>
+    </div>
 
-<hr>
-
-<ul id="taskList">
-    <!-- Tasks loaded via JS -->
-</ul>
-
-<a href="/projects">← Back to projects</a>
+    <!-- Task List Container -->
+    <div id="taskList">
+        <!-- JS will populate task-rows here -->
+    </div>
+</div>
 
 <script src="/static/js/tasks.js"></script>
-<li>
-    <strong>{{ .Title }}</strong> —
-    <em>{{ .Status }}</em>
-
-    <form method="POST" action="/projects/tasks/{{ .ID }}/status" style="display:inline;">
-        {{ if eq .Status "todo" }}
-        <input type="hidden" name="status" value="in_progress">
-        <button type="submit">Start</button>
-        {{ else if eq .Status "in_progress" }}
-        <input type="hidden" name="status" value="done">
-        <button type="submit">Complete</button>
-        {{ end }}
-    </form>
-</li>
-
 {{ template "footer" . }}

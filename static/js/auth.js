@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = loginForm.email.value;
         const password = loginForm.password.value;
 
+        // Use custom showFlash if available, else fallback
+        const notify = window.showFlash || alert;
+
         try {
             const response = await fetch("/login", {
                 method: "POST",
@@ -25,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
 
             if (!response.ok) {
-                alert(data || "Login failed");
+                notify(data.error || "Login failed. Please check your credentials.", "error");
                 return;
             }
 
@@ -33,10 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.setItem("token", data.token);
 
             // Redirect to dashboard
-            window.location.href = "/dashboard";
+            notify("Login successful!", "success");
+            setTimeout(() => {
+                window.location.href = "/dashboard";
+            }, 500);
 
         } catch (error) {
-            alert("Something went wrong");
+            console.error(error);
+            notify("Network error. Please try again.", "error");
         }
     });
 });

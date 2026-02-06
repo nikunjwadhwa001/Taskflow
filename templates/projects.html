@@ -1,21 +1,29 @@
 {{ template "header" . }}
-<h1>Your Projects</h1>
 
-<!-- Create Project Form -->
-<form id="createProjectForm">
-    <input type="text" id="projectName" placeholder="Project name" required>
-    <button type="submit">Create</button>
-</form>
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+            <h1>Projects</h1>
+            <p style="color: var(--text-muted);">Manage your work and track progress.</p>
+        </div>
+        <!-- Toggle form visibility could be added here later -->
+    </div>
 
-<hr>
+    <!-- Create Project Inline Card -->
+    <div class="card" style="margin-bottom: 2rem; padding: 1.5rem;">
+        <h4 style="margin-bottom: 1rem;">Create New Project</h4>
+        <form id="createProjectForm" style="display: flex; gap: 1rem;">
+            <input type="text" id="projectName" placeholder="e.g. Website Redesign" required
+                style="flex: 1; margin-bottom: 0;">
+            <button type="submit" class="btn btn-primary">Create Project</button>
+        </form>
+    </div>
 
-<!-- List Projects -->
-<ul id="projectList">
-    <!-- Projects will be loaded here via JS -->
-</ul>
-<li>
-    <a href="/projects/{{ .ID }}/tasks">{{ .Name }}</a>
-</li>
+    <!-- Grid Layout for Projects -->
+    <div id="projectList" class="grid-layout">
+        <!-- JS will populate project-cards here -->
+    </div>
+</div>
 
 <script src="/static/js/projects.js"></script>
 {{ template "footer" . }}

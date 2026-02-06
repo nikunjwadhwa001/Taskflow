@@ -1,43 +1,45 @@
 {{ template "header" . }}
-<h1>Dashboard</h1>
-<p>Welcome back! Here is your overview.</p>
 
-<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
-    <div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; min-width: 150px;">
-        <h3>Total Projects</h3>
-        <p id="totalProjects" style="font-size: 24px; font-weight: bold;">Loading...</p>
+<div class="container">
+    <div style="margin-bottom: 2rem;">
+        <h1>Your Dashboard</h1>
+        <p style="color: var(--text-muted);">Welcome back! Here is an overview of your work.</p>
     </div>
 
-    <div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; min-width: 150px;">
-        <h3>Total Tasks</h3>
-        <p id="totalTasks" style="font-size: 24px; font-weight: bold;">Loading...</p>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">Total Projects</span>
+            <span class="stat-value" id="totalProjects">-</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">Total Tasks</span>
+            <span class="stat-value" id="totalTasks">-</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Task Status Breakdown</h3>
+            <p class="card-subtitle">Snapshot of current workload</p>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 0;">
+            <div style="text-align: center;">
+                <span class="stat-value" style="color: var(--text-muted);" id="todoCount">0</span>
+                <span class="badge badge-todo" style="display: inline-block; margin-top: 0.5rem;">To Do</span>
+            </div>
+            <div style="text-align: center;">
+                <span class="stat-value" style="color: var(--primary);" id="inProgressCount">0</span>
+                <span class="badge badge-progress" style="display: inline-block; margin-top: 0.5rem;">In Progress</span>
+            </div>
+            <div style="text-align: center;">
+                <span class="stat-value" style="color: var(--success);" id="doneCount">0</span>
+                <span class="badge badge-done" style="display: inline-block; margin-top: 0.5rem;">Done</span>
+            </div>
+        </div>
     </div>
 </div>
 
-<h3>Task Status</h3>
-<div style="display: flex; gap: 20px; flex-wrap: wrap;">
-    <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; flex: 1;">
-        <strong>To Do</strong>
-        <p id="todoCount">0</p>
-    </div>
-    <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; flex: 1;">
-        <strong>In Progress</strong>
-        <p id="inProgressCount">0</p>
-    </div>
-    <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; flex: 1;">
-        <strong>Done</strong>
-        <p id="doneCount">0</p>
-    </div>
-</div>
-
-<br>
-<button onclick="logout()">Logout</button>
-
-<script src="/static/js/dashboard.js?v=2"></script>
-<script>
-    function logout() {
-        localStorage.removeItem("token");
-        window.location.href = "/login";
-    }
-</script>
+<script src="/static/js/dashboard.js?v=4"></script>
 {{ template "footer" . }}

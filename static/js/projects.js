@@ -28,15 +28,22 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             if (data.projects && data.projects.length > 0) {
                 data.projects.forEach(project => {
-                    const li = document.createElement("li");
-                    li.innerHTML = `
-                        <a href="/projects/${project.ID}/tasks">${project.Name}</a>
-                        <button onclick="deleteProject(${project.ID})" style="color: red; margin-left: 10px;">Delete</button>
+                    const card = document.createElement("div");
+                    card.className = "project-card";
+                    card.innerHTML = `
+                        <div>
+                            <span class="project-name">${project.Name}</span>
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">Project ID: #${project.ID}</span>
+                        </div>
+                        <div class="project-actions">
+                            <a href="/projects/${project.ID}/tasks" class="btn btn-sm btn-outline">View Board</a>
+                            <button onclick="deleteProject(${project.ID})" class="btn btn-sm btn-danger">Delete</button>
+                        </div>
                     `;
-                    projectList.appendChild(li);
+                    projectList.appendChild(card);
                 });
             } else {
-                projectList.innerHTML = "<li>No projects yet</li>";
+                projectList.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No projects found. Create one above!</p>`;
             }
 
         } catch (error) {
@@ -56,11 +63,13 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             if (response.ok) {
                 loadProjects();
+                showFlash("Project deleted!");
             } else {
-                alert("Failed to delete project");
+                showFlash("Failed to delete project", "error");
             }
         } catch (error) {
             console.error("Error deleting project:", error);
+            showFlash("Error deleting project", "error");
         }
     }
 
@@ -74,23 +83,22 @@ document.addEventListener("DOMContentLoaded", async function () {
             const response = await fetch("/api/projects", {
                 method: "POST",
                 headers: {
-                    "Authorization": "Bearer " + token,
                     "Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization": "Bearer " + token,
                 },
-                body: new URLSearchParams({ name: name })
+                body: new URLSearchParams({ name }),
             });
 
-            if (!response.ok) {
-                alert("Failed to create project");
-                return;
+            if (response.ok) {
+                document.getElementById("projectName").value = "";
+                loadProjects();
+                showFlash("Project created!");
+            } else {
+                showFlash("Failed to create project", "error");
             }
-
-            // Reload list and clear input
-            document.getElementById("projectName").value = "";
-            loadProjects();
-
         } catch (error) {
             console.error("Error creating project:", error);
+            showFlash("Error creating project", "error");
         }
     });
 

@@ -10,9 +10,58 @@
 <body>
 
     <header>
-        <h2>TaskFlow</h2>
-        <hr>
+        <div class="nav-container">
+            <div class="brand-logo">
+                <h2>TaskFlow</h2>
+            </div>
+
+            <nav id="global-nav">
+                <span class="auth-links" style="display: none;">
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/projects">Projects</a>
+                    <a href="#" onclick="logout(); return false;" class="btn btn-sm btn-outline"
+                        style="margin-left: 1rem;">Logout</a>
+                </span>
+                <span class="guest-links">
+                    <a href="/login" style="margin-right: 1rem;">Login</a>
+                    <a href="/register" class="btn btn-sm btn-primary">Get Started</a>
+                </span>
+            </nav>
+        </div>
     </header>
+
+    <div id="flash-message" class="flash-hidden"></div>
+
+    <script>
+        // Simple auth check to toggle links
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("token");
+            if (token) {
+                document.querySelectorAll(".auth-links").forEach(el => el.style.display = "inline");
+                document.querySelectorAll(".guest-links").forEach(el => el.style.display = "none");
+            } else {
+                document.querySelectorAll(".auth-links").forEach(el => el.style.display = "none");
+                document.querySelectorAll(".guest-links").forEach(el => el.style.display = "inline");
+            }
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+        }
+
+        // Global Flash Message Function
+        window.showFlash = function (message, type = 'success') {
+            const flash = document.getElementById("flash-message");
+            flash.innerText = message;
+            flash.className = `flash-visible flash-${type}`;
+
+            setTimeout(() => {
+                flash.className = "flash-hidden";
+            }, 3000);
+        }
+    </script>
     {{ end }}
 
     {{ define "footer" }}
